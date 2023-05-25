@@ -1,5 +1,5 @@
 import math, random
-from livewires import games, color
+from superwires import games, color
 
 games.init(screen_width = 640, screen_height = 480, fps = 50)
 
