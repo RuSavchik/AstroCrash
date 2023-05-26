@@ -224,9 +224,11 @@ class Game(object):
             y = self.ship.y + y_distance
             x %= games.screen.width
             y %= games.screen.height
-            ENEMYS = {"asteroid" : "Asteroid(game = self, x = x, y = y, size = Asteroid.LARGE)",
-                      "pizza" : "Pizza(game = self, x = x, y = y)"}
-            new_enemy = ENEMYS[(random.randrange(2) - 1)]
+            ENEMYS = ["Asteroid(game = self, x = x, y = y, size = Asteroid.LARGE)",
+                      "Pizza(game = self, x = x, y = y)"]
+            
+            random.shuffle(ENEMYS)
+            new_enemy = ENEMYS[0]
             games.screen.add(new_enemy)
 
             level_message = games.Message(value = "Рівень " + str(self.level),
