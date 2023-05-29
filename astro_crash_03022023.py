@@ -23,6 +23,7 @@ class Wrapper(games.Sprite):
 
 
 class Collider(Wrapper):
+
     def update(self):
         super(Collider, self).update()
         if self.overlapping_sprites:
@@ -37,12 +38,12 @@ class Collider(Wrapper):
 
         
 class Asteroid(Wrapper):
+    SPEED = 2
+    POINTS = 30
     SMALL = 1
     MEDIUM = 2
     LARGE = 3
     SPAWN = 2
-    POINTS = 30
-    SPEED = 2
     images = {SMALL : games.load_image("asteroid_small.bmp"),
               MEDIUM : games.load_image("asteroid_med.bmp"),
               LARGE : games.load_image("asteroid_big.bmp")}
@@ -65,20 +66,18 @@ class Asteroid(Wrapper):
         if self.size != Asteroid.SMALL:
             for i in range (Asteroid.SPAWN):
                 Game.total += 1
-                new_asteroid = Asteroid(game = self.game, 
+                new_asteroid = Asteroid(game = self.game,
                                         x = self.x,
                                         y = self.y,
                                         size = self.size - 1)
                 games.screen.add(new_asteroid)
-    
+
         super(Asteroid, self).die()
 
-        
+
 class Pizza(Wrapper):
-#     HIT = 2
-#     SPEED = 2
-#     POINTS = 60
     image = games.load_image("pizza.bmp")
+
     def __init__(self, game, x, y, hit = 2):
         super(Pizza, self).__init__(image = Pizza.image,
                                     x = x, y = y,
@@ -87,18 +86,17 @@ class Pizza(Wrapper):
 
         self.game = game
         self.hit = hit
-
+            
     def die(self):
         self.hit -= 1
         if self.hit == 0:
             Game.total -= 1
             self.game.score.value += int(Asteroid.POINTS)
             self.game.score.right = games.screen.width - 10
-            super(Pizza, self).die()        
+            super(Pizza, self).die()
 
 
 class Ship(Collider):
-    
     image = games.load_image("ship.bmp")
     sound = games.load_sound("thrust.wav")
     ROTATION_STEP = 3
@@ -188,7 +186,7 @@ class Explosion(games.Animation):
 
 class Game(object):
     total = 0
-
+    
     def __init__(self):
         self.level = 0
         self.sound = games.load_sound("level.wav")
@@ -199,7 +197,7 @@ class Game(object):
                                 right = games.screen.width - 10,
                                 is_collideable = False)
         games.screen.add(self.score)
-        
+
         self.ship = Ship(game = self,
                          x = games.screen.width/2,
                          y = games.screen.height/2)
@@ -225,21 +223,17 @@ class Game(object):
             y = self.ship.y + y_distance
             x %= games.screen.width
             y %= games.screen.height
-            
+
             Game.total += 1
-
-            #enemy = Asteroid(game = self, x = x, y = y, size = Asteroid.LARGE)
             
-            enemy = [Asteroid(game = self, x = x, y = y, size = Asteroid.LARGE),
-                    Pizza(game = self, x = x, y = y)]
-            
-            random.shuffle(enemy)
-            
-            #new_enemy = enemy[0]
-            
-            games.screen.add(enemy[0])
+            enemy = {"new_asteroid" : Asteroid(game = self, x = x, y = y, size = Asteroid.LARGE),
+                     "new_pizza" : Pizza(game = self, x = x, y = y)}
+            enemy_var = ["new_asteroid", "new_pizza"]
+            new_enemy = enemy[random.choice(enemy_var)]
+            games.screen.add(new_enemy)
 
             
+
             level_message = games.Message(value = "Рівень " + str(self.level),
                                           size = 40,
                                           color = color.yellow,
@@ -262,7 +256,6 @@ class Game(object):
                                     is_collideable = False)
         games.screen.add(end_message)
         
-
     
 def main():
     astrocrash = Game()
