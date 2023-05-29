@@ -75,10 +75,8 @@ class Asteroid(Wrapper):
 
         
 class Pizza(Wrapper):
-#     HIT = 2
-#     SPEED = 2
-#     POINTS = 60
     image = games.load_image("pizza.bmp")
+    
     def __init__(self, game, x, y, hit = 2):
         super(Pizza, self).__init__(image = Pizza.image,
                                     x = x, y = y,
@@ -227,18 +225,11 @@ class Game(object):
             y %= games.screen.height
             
             Game.total += 1
-
-            #enemy = Asteroid(game = self, x = x, y = y, size = Asteroid.LARGE)
-            
+                     
             enemy = [Asteroid(game = self, x = x, y = y, size = Asteroid.LARGE),
                     Pizza(game = self, x = x, y = y)]
-            
             random.shuffle(enemy)
-            
-            #new_enemy = enemy[0]
-            
             games.screen.add(enemy[0])
-
             
             level_message = games.Message(value = "Рівень " + str(self.level),
                                           size = 40,
@@ -248,6 +239,7 @@ class Game(object):
                                           lifetime = 3 * games.screen.fps,
                                           is_collideable = False)
             games.screen.add(level_message)
+            
             if self.level > 1:
                 self.sound.play()
 
@@ -262,7 +254,6 @@ class Game(object):
                                     is_collideable = False)
         games.screen.add(end_message)
         
-
     
 def main():
     astrocrash = Game()
